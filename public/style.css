@@ -2,7 +2,7 @@
 
 html {
   background: #436f8e; /* Old browsers */
-  background: url('bg-stars.png') repeat-x center top, linear-gradient(to bottom, #436f8e 0%, #c2e8c2 100%) no-repeat center; /* W3C */
+  background: linear-gradient(to bottom, #436f8e 0%, #c2e8c2 100%) no-repeat center; /* W3C */
   min-height: 100%;
 }
 
@@ -42,7 +42,7 @@ a:active {
   color: #333;
 }
 
-form, .block-list {
+form, .category-list {
   background: white;
   margin-bottom: 20px;
   padding: 20px;
@@ -82,12 +82,12 @@ input[type="submit"] {
   width: auto;
 }
 
-.block-list li::after {
+.category-list li::after {
   clear: both;
   content: '';
   display: table;
 }
-.block-list li a:last-child {
+.category-list li a:last-child {
   float: left;
   padding-right: 10px;
 }

@@ -1,4 +1,4 @@
-$(function(){
+(function(){
 
     function appendToCategoryList(categories) {
         var list = [];
@@ -28,6 +28,7 @@ $(function(){
             appendToCategoryList([categoryName]);
             form.trigger('reset');
         });
+    });
 
     // Deleting a block
     $('.category-list').click('a[data-categoryName]', function (event){
@@ -46,4 +47,4 @@ $(function(){
                 target.parents('li').remove();
             });
     });
-});
+})();

@@ -4,7 +4,7 @@
   "description": "Counts Things!",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,11 @@
   },
   "homepage": "https://github.com/prickprat/CounterLogic#readme",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "supertest": "^1.1.0"
   }
 }

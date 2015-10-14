@@ -8,11 +8,10 @@ var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({ extended: false });
 
 var categoryStore = {
-  'Lotopia': 'Rough and mountainous',
-  'Caspiana': 'Sky-top island',
-  'Indigo': 'Vibrant and thriving',
-  'Paradise': 'Lush, green plantation',
-  'Flotilla': 'Bustling urban oasis'
+  'Eating': 'Food in mouth.',
+  'Sleeping': '8 hrs a day.',
+  'Pooping': 'Something you do with your butt.',
+  'Flooping': 'Mattresses do this.'
 };
 
 //Format the category name to be leading Uppercase
@@ -32,7 +31,7 @@ var router = express.Router();
 router.route('/')
     .get(function (req, res) {
         var categoryNames = Object.keys(categoryStore);
-        response.status(200).json(categoryNames);
+        res.status(200).json(categoryNames);
     })
 
     .post(parseUrlencoded, function (req, res) {
@@ -69,11 +68,13 @@ router.route('/:name')
     });
 
 /* Serve static files from public directory */
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static('public'));
+app.get('/', function(req, res) {
+    res.send('OK');
+});
 
 app.use('/categories', router);
 
-var port = process.env.PORT || 3000;
-app.listen(port, function () {
-    console.log('Server listening on port %d\n', port);
-});
+module.exports = app;
+
+
