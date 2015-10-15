@@ -68,10 +68,7 @@ router.route('/:name')
     });
 
 /* Serve static files from public directory */
-//app.use(express.static('public'));
-app.get('/', function(req, res) {
-    res.send('OK');
-});
+app.use(express.static('public'));
 
 app.use('/categories', router);
 
