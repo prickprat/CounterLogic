@@ -53,3 +53,20 @@ describe('Listing Categories on /categories', function () {
                 done);
     });
 });
+
+describe('Creating new cities', function () {
+    it('Returns a 201 status code', function (done) {
+        request(app)
+            .post('/categories')
+            .send('name=Hello&description=just+saying+hi')
+            .expect(201, done);
+    });
+
+    it('Returns the category name', function (done) {
+        request(app)
+            .post('/categories')
+            .send('name=Hello&description=just+saying+hi')
+            .expect('Content-Type', /json/)
+            .expect(JSON.stringify('Hello'), done);
+    });
+});

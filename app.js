@@ -44,6 +44,7 @@ router.route('/')
     });
 
 router.route('/:name')
+
     .all(function (req, res, next) {
         req.categoryName = parseCategoryName(req.params.name);
         next();
