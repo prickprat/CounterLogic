@@ -22,7 +22,8 @@
   "homepage": "https://github.com/prickprat/CounterLogic#readme",
   "dependencies": {
     "body-parser": "^1.14.1",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "redis": "^2.2.4"
   },
   "devDependencies": {
     "mocha": "^2.3.3",

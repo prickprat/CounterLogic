@@ -31,7 +31,7 @@
     });
 
     // Deleting a block
-    $('.category-list').click('a[data-categoryName]', function (event){
+    $('.category-list a[data-categoryName]').click('a[data-categoryName]', function (event){
         var target = $(event.currentTarget);
 
         if(!confirm('Are you sure you want to delete?')) {
