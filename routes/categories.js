@@ -18,8 +18,13 @@ if (process.env.REDISTOGO_URL) {
 }
 //End Redis Connection
 
-//Format the category name to be leading Uppercase
+
 function parseCategoryName(name) {
+    //Format the category name to be leading Uppercase
+    if (name.length === 0) {
+        return '';
+    }
+
     var parsedName = name[0].toUpperCase() + name.slice(1).toLowerCase();
     return parsedName;
 }
@@ -36,15 +41,18 @@ router.route('/')
     })
 
     .post(parseUrlencoded, function (req, res) {
-        if (req.body.name.length <= 0) {
+        var categoryName = parseCategoryName(req.body.name);
+        var categoryDescription = req.body.description;
+
+        if (categoryName.length <= 0) {
             res.status(400).json('Invalid Category Name');
-        } else if (req.body.description.length <= 0) {
+        } else if (categoryDescription.length <= 0) {
             res.status(400).json('Invalid Description');
         } else {
-            redisClient.hset('categories', req.body.name, req.body.description, function(error) {
+            redisClient.hset('categories', categoryName, categoryDescription, function(error) {
                 if (error) throw error;
 
-                res.status(201).json(req.body.name);
+                res.status(201).json(categoryName);
             });
         }
     });
@@ -57,17 +65,16 @@ router.route('/:name')
     })
 
     .get(function (req, res) {
-        redisClient.hget('categories', req.categoryName, function(error, categoryInfo) {
+        redisClient.hget('categories', req.categoryName, function(error, description) {
             if (error) throw error;
 
-            if (categoryInfo) {
+            if (description) {
                 res.render('show.ejs', {
                     category: {
                         name: req.categoryName,
-                        description: categoryInfo
+                        description: description
                     }
                 });
-                //res.status(200).json(categoryInfo);
             } else {
                 res.sendStatus(404);
             }
