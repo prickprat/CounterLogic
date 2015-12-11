@@ -6,7 +6,7 @@
 
         $.each(categories, function(index, categoryName) {
             content = '<a href="/categories/' + categoryName + '">' + categoryName + '</a>' +
-                        ' <a href="#" data-categoryName="' + categoryName + '">' +
+                        ' <a href="#" data-category-name="' + categoryName + '">' +
                         '<img class="deleteButton" src="delete.png"></a>';
             list.push($('<li>', { html: content }));
         })
@@ -24,19 +24,25 @@
         var form = $(this);
         var categoryData = form.serialize();
 
-        $.post('/categories', categoryData, function (categoryName){
-            appendToCategoryList([categoryName]);
-            form.trigger('reset');
-        });
+        $('.alert').hide();
+
+        $.post('/categories', categoryData)
+            .done(function(categoryName) {
+                appendToCategoryList([categoryName]);
+                form.trigger('reset');
+            })
+            .fail(function() {
+                $('.alert').show();
+            });
     });
 
     // Deleting a block
-    $('.category-list a[data-categoryName]').click('a[data-categoryName]', function (event){
-        var target = $(event.currentTarget);
-
+    $('.category-list').on('click', 'a[data-category-name]', function (event){
         if(!confirm('Are you sure you want to delete?')) {
             return false;
         }
+
+        var target = $(event.currentTarget);
 
         //Remove the block from the server and block list.
         $.ajax({

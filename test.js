@@ -60,7 +60,7 @@ describe('Listing Categories on /categories', function () {
     });
 });
 
-describe('Creating new cities', function () {
+describe('Creating new categories', function () {
     it('Returns a 201 status code', function (done) {
         request(app)
             .post('/categories')
@@ -76,14 +76,16 @@ describe('Creating new cities', function () {
             .expect(JSON.stringify('Hello'), done);
     });
 
-    it('validates category names and description', function (done) {
+    it('validates category names ', function (done) {
         request(app)
             .post('/categories')
             .send('name=&description=just+saying+hi')
             .expect(400)
             .expect('Content-Type', /json/)
             .expect(JSON.stringify('Invalid Category Name'), done);
+    });
 
+    it('validates category descriptions', function(done) {
         request(app)
             .post('/categories')
             .send('name=helloo&description=')
@@ -106,5 +108,40 @@ describe('Deleting Categories', function() {
         request(app)
             .delete('/categories/Poop')
             .expect(204, done);
+    });
+
+    it('Returns a 400 code when there is nothing to delete', function(done) {
+        request(app)
+            .delete('/categories/Nothing')
+            .expect(400, done);
+    });
+});
+
+describe('Shows Category info', function() {
+
+    before(function() {
+        client.hset('categories', 'Poop', 'smells like shit');
+    });
+
+    after(function() {
+        client.flushdb();
+    });
+
+    it('returns 200 status code', function(done) {
+        request(app)
+            .get('/categories/Poop')
+            .expect(200, done);
+    });
+
+    it('returns html format', function(done) {
+        request(app)
+            .get('/categories/Poop')
+            .expect('Content-Type', /html/, done);
+    });
+
+    it('returns information for given category', function(done) {
+        request(app)
+            .get('/categories/Poop')
+            .expect(/smells/, done);
     });
 });
