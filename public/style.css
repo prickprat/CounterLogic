@@ -93,6 +93,7 @@ input[type="submit"] {
 }
 img.deleteButton {
     width: 15px;
+    float: left;
 }
 
 .alert {
@@ -101,4 +102,8 @@ img.deleteButton {
   padding: 10px 5px 10px 5px;
   text-align: center;
   display: none;
+}
+
+.counter {
+  float: right;
 }

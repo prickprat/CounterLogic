@@ -31,12 +31,31 @@ function parseCategoryName(name) {
 
 router.route('/')
     .get(function (req, res) {
-        redisClient.hkeys('categories', function(error, categoryNames) {
+        redisClient.smembers('categories', function(error, categoryNames) {
+            var categories = [];
+
             if(error) {
                 throw error;
             }
+            categoryNames.forEach(function(categoryName) {
+                redisClient.hmget('category:' + categoryName, [
+                        'name',
+                        'description',
+                        'count'
+                    ], function(error, categoryInfo){
+                        if (error) throw error;
 
-            res.status(200).json(categoryNames);
+                        categories.push({
+                            name: categoryInfo[0],
+                            description: categoryInfo[1],
+                            count: categoryInfo[2]
+                        });
+
+                        if (categories.length === categoryNames.length) {
+                            res.status(200).json(categories);
+                        }
+                    });
+            });
         });
     })
 
@@ -49,10 +68,19 @@ router.route('/')
         } else if (categoryDescription.length <= 0) {
             res.status(400).json('Invalid Description');
         } else {
-            redisClient.hset('categories', categoryName, categoryDescription, function(error) {
+            redisClient.sadd('categories', categoryName, function(error) {
                 if (error) throw error;
-
-                res.status(201).json(categoryName);
+                redisClient.hmset('category:' + categoryName, [
+                    'name', categoryName,
+                    'description', categoryDescription,
+                    'count', 0
+                    ],
+                    function(error){
+                        if (error) {
+                            throw error;
+                        }
+                        res.status(201).json({'name':categoryName, 'count': 0});
+                    })
             });
         }
     });
@@ -65,7 +93,7 @@ router.route('/:name')
     })
 
     .get(function (req, res) {
-        redisClient.hget('categories', req.categoryName, function(error, description) {
+        redisClient.hget('category:' + req.categoryName, 'description', function(error, description) {
             if (error) throw error;
 
             if (description) {
@@ -82,12 +110,14 @@ router.route('/:name')
     })
 
     .delete(function (req, res) {
-        redisClient.hexists('categories', req.categoryName, function(error, categoryExists) {
+        redisClient.sismember('categories', req.categoryName, function(error, categoryExists){
             if (error) throw error;
-
-            if(categoryExists) {
-                redisClient.hdel('categories', req.categoryName, function(error) {
+            if (categoryExists) {
+                redisClient.srem('categories', req.categoryName, function(error) {
                     if (error) throw error;
+                    redisClient.del('category:'+ req.categoryName, function(error) {
+                        if (error) throw error;
+                    });
                     res.sendStatus(204);
                 });
             } else {

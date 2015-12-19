@@ -2,12 +2,12 @@
 /*jslint node: true */
 
 var express = require('express');
-var app = express();
+var server = express();
 
 /* Serve static files from public directory */
-app.use(express.static('public'));
+server.use(express.static('public'));
 
 var categories = require('./routes/categories');
-app.use('/categories', categories);
+server.use('/categories', categories);
 
-module.exports = app;
+module.exports = server;

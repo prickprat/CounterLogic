@@ -5,9 +5,10 @@
         var content;
 
         $.each(categories, function(index, categoryName) {
-            content = '<a href="/categories/' + categoryName + '">' + categoryName + '</a>' +
-                        ' <a href="#" data-category-name="' + categoryName + '">' +
-                        '<img class="deleteButton" src="delete.png"></a>';
+            content = '<a href="/categories/' + categoryName.name + '">' + categoryName.name + '</a>' +
+                        ' <a href="#" data-category-name="' + categoryName.name + '">' +
+                        '<img class="deleteButton" src="delete.png"></a>' +
+                        '<span class="counter"><span>Counter:</span><span>' + categoryName.count + '</span></span>';
             list.push($('<li>', { html: content }));
         })
 
@@ -28,7 +29,7 @@
 
         $.post('/categories', categoryData)
             .done(function(categoryName) {
-                appendToCategoryList([categoryName]);
+                appendToCategoryList([categoryName.name]);
                 form.trigger('reset');
             })
             .fail(function() {
